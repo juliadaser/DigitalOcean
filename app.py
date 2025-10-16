@@ -8,6 +8,7 @@ import base64
 import os
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "randomstring"
 
 # --- Form definition ---
 class UploadForm(FlaskForm):
@@ -20,7 +21,7 @@ class UploadForm(FlaskForm):
     submit = SubmitField("Upload")
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def hello_world():
     form = UploadForm()
     file_url = None
@@ -48,3 +49,7 @@ def hello_world():
     return render_template("index.html", form=form,
         file_url=file_url,
         similarity_results=similarity_results,)
+
+
+if __name__ == "__main__":  # ← this part must exist
+    app.run(host="0.0.0.0", port=8080, debug=True)
