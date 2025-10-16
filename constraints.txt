@@ -1,0 +1,1 @@
+tensorflow==9999  # blocks deepface from installing full TF
