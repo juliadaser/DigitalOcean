@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your New Flask App</title>
+    <title>Face Value</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
@@ -11,9 +11,39 @@
   </head>
 
   <body>
-    <h1>finally works</h1>
-    {% if variable %}
-    <h1>finally works also here</h1>
+    <form method="post" enctype="multipart/form-data">
+      {{form.hidden_tag()}} {% for error in form.photo.errors %}
+      <span style="color: red">{{error}}</span>
+      {%endfor%}
+      <div>
+        <div>{{form.photo()}}</div>
+        <div>{{form.submit()}}</div>
+      </div>
+    </form>
+
+    <div>
+      {% if file_url %}
+      <!-- Server-side image after form submit -->
+      <img id="preview" src="{{ file_url }}" style="width: 300px" />
+      {% else %}
+      <!-- Empty preview (hidden until file is chosen) -->
+      <img id="preview" src="" style="width: 300px; display: none" />
+      {% endif %}
+    </div>
+
+    {% if similarity_results %}
+    <h3>Top Matches:</h3>
+    <ul>
+      {% for ref_img, score in similarity_results %}
+      <li>
+        <img
+          src="{{ url_for('static', filename='bills_db/' + ref_img.split('/')[-1]) }}"
+          style="width: 200px"
+        />
+        {{ (score * 100) | round(2) }}%
+      </li>
+      {% endfor %}
+    </ul>
     {% endif %}
   </body>
 </html>
